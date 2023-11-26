@@ -30,7 +30,7 @@ async function getSheetValues(auth, spreadsheetId, range) {
 app.get("/", async (req, res) => {
     const auth = await getAuthClient();
 
-    const spreadsheetId = "1aMjDqzqPPdOoxw13T5_941Cbmu6ioQuygBVYjfpmXmo";
+    const spreadsheetId = "1uUumH7kO0ptmM8tj0dLHK0orMq_om9ceLA2wdALwWKM";
 
     // Fetch check-in data
     const checkInValues = await getSheetValues(auth, spreadsheetId, "Iot!C4:C7");
@@ -49,7 +49,7 @@ app.get("/", async (req, res) => {
 // New route to handle toggling Light State
 app.post("/updateLightState", async (req, res) => {
     const auth = await getAuthClient();
-    const spreadsheetId = "1aMjDqzqPPdOoxw13T5_941Cbmu6ioQuygBVYjfpmXmo";
+    const spreadsheetId = "1uUumH7kO0ptmM8tj0dLHK0orMq_om9ceLA2wdALwWKM";
     
     const googleSheets = google.sheets({ version: "v4", auth });
 
@@ -82,7 +82,7 @@ app.post("/updateLightState", async (req, res) => {
 // New route to handle toggling AC State
 app.post("/updateACState", async (req, res) => {
     const auth = await getAuthClient();
-    const spreadsheetId = "1aMjDqzqPPdOoxw13T5_941Cbmu6ioQuygBVYjfpmXmo";
+    const spreadsheetId = "1uUumH7kO0ptmM8tj0dLHK0orMq_om9ceLA2wdALwWKM";
     
     const googleSheets = google.sheets({ version: "v4", auth });
 

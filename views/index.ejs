@@ -5,7 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IOT Project</title>
     <style>
-        /* Your existing styles here */
+          body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        p {
+            margin-top: 20px;
+            color: #333;
+        }
+
+        form {
+            margin-top: 10px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        input[type="submit"] {
+            padding: 8px;
+            font-size: 14px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
 
         th {
             background-color: #4CAF50;
@@ -18,7 +74,7 @@
 
     <!-- Display current state of Light and AC beside the toggle buttons -->
     <p>Current Light State: <%= lightState %></p>
-    <p>Current AC State: <%= acState %></p>
+    <p>Current Door State: <%= acState %></p>
 
     <!-- Table to display Nhiệt độ phòng, Độ ẩm, and Khí Gas data -->
     <table>
@@ -30,13 +86,11 @@
             </tr>
         </thead>
         <tbody>
-            <% for (const row of checkInValues) { %>
-                <tr>
-                    <td><%= row[0] %></td>
-                    <td><%= row[1] %></td>
-                    <td><%= row[2] %></td>
-                </tr>
-            <% } %>
+            <tr>
+                <td><%= checkInValues[0] %></td>
+                <td><%= checkInValues[1] %></td>
+                <td><%= checkInValues[2] %></td>
+            </tr>
         </tbody>
     </table>
 
@@ -51,7 +105,7 @@
     <!-- Button to toggle AC State -->
     <form action="/updateACState" method="POST">
         <div>
-            <label for="acState">Toggle AC:</label>
+            <label for="acState">Toggle Door:</label>
             <input type="submit" value="Toggle">
         </div>
     </form>
@@ -60,7 +114,7 @@
         // Auto-update every 60,000ms (60 seconds)
         setInterval(function() {
             location.reload();
-        }, 60000);
+        }, 5000);
     </script>
 </body>
 </html>
