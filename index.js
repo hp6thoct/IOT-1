@@ -30,17 +30,17 @@ async function getSheetValues(auth, spreadsheetId, range) {
 app.get("/", async (req, res) => {
     const auth = await getAuthClient();
 
-    const spreadsheetId = "1uUumH7kO0ptmM8tj0dLHK0orMq_om9ceLA2wdALwWKM";
+    const spreadsheetId = "1aMjDqzqPPdOoxw13T5_941Cbmu6ioQuygBVYjfpmXmo";
 
     // Fetch check-in data
-    const checkInValues = await getSheetValues(auth, spreadsheetId, "Iot!A2:C7");
+    const checkInValues = await getSheetValues(auth, spreadsheetId, "Iot!C4:C7");
 
     // Get state of light
-    const lightStateResponse = await getSheetValues(auth, spreadsheetId, "Iot!E2:E2");
+    const lightStateResponse = await getSheetValues(auth, spreadsheetId, "Iot!C2:C2");
     const lightState = lightStateResponse[0][0] || null;
 
     // Get state of AC
-    const acStateResponse = await getSheetValues(auth, spreadsheetId, "Iot!F2:F2");
+    const acStateResponse = await getSheetValues(auth, spreadsheetId, "Iot!B2:B2");
     const acState = acStateResponse[0][0] || null;
 
     res.render("index", { checkInValues, lightState, acState });
@@ -49,27 +49,27 @@ app.get("/", async (req, res) => {
 // New route to handle toggling Light State
 app.post("/updateLightState", async (req, res) => {
     const auth = await getAuthClient();
-    const spreadsheetId = "1uUumH7kO0ptmM8tj0dLHK0orMq_om9ceLA2wdALwWKM";
+    const spreadsheetId = "1aMjDqzqPPdOoxw13T5_941Cbmu6ioQuygBVYjfpmXmo";
     
     const googleSheets = google.sheets({ version: "v4", auth });
 
     // Get the current state of the light
     const response = await googleSheets.spreadsheets.values.get({
         spreadsheetId,
-        range: "Iot!E2:E2",
+        range: "Iot!C2:C2",
     });
 
     // Extract the current value
     const currentValue = response.data.values[0][0];
 
     // Toggle the state of the light
-    const newLightState = currentValue === "ON" ? "OFF" : "ON";
+    const newLightState = currentValue === "2on" ? "2off" : "2on";
 
     // Update the cell with the new value
     await googleSheets.spreadsheets.values.update({
         auth,
         spreadsheetId,
-        range: "Iot!E2:E2",
+        range: "Iot!C2:C2",
         valueInputOption: "USER_ENTERED",
         resource: {
             values: [[newLightState]],
@@ -82,27 +82,27 @@ app.post("/updateLightState", async (req, res) => {
 // New route to handle toggling AC State
 app.post("/updateACState", async (req, res) => {
     const auth = await getAuthClient();
-    const spreadsheetId = "1uUumH7kO0ptmM8tj0dLHK0orMq_om9ceLA2wdALwWKM";
+    const spreadsheetId = "1aMjDqzqPPdOoxw13T5_941Cbmu6ioQuygBVYjfpmXmo";
     
     const googleSheets = google.sheets({ version: "v4", auth });
 
     // Get the current state of the AC
     const response = await googleSheets.spreadsheets.values.get({
         spreadsheetId,
-        range: "Iot!F2:F2",
+        range: "Iot!B2:B2",
     });
 
     // Extract the current value
     const currentValue = response.data.values[0][0];
 
     // Toggle the state of the AC
-    const newACState = currentValue === "ON" ? "OFF" : "ON";
+    const newACState = currentValue === "1on" ? "1off" : "1on";
 
     // Update the cell with the new value
     await googleSheets.spreadsheets.values.update({
         auth,
         spreadsheetId,
-        range: "Iot!F2:F2",
+        range: "Iot!B2:B2",
         valueInputOption: "USER_ENTERED",
         resource: {
             values: [[newACState]],
