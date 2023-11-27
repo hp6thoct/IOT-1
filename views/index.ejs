@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>IOT Project</title>
+    <link rel="icon" type="image/x-icon" href="https://www.globalsign.com/application/files/7416/3763/0034/General_Banner_WhatisIOT_4_APAC_2021_11_22.jpg">
     <!-- Add Bootstrap CSS link here -->
     <link
       rel="stylesheet"
@@ -142,11 +143,17 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td><%= checkInValues[0] %></td>
-                <td><%= checkInValues[1] %></td>
-                <td><%= checkInValues[2] %></td>
-              </tr>
+              <% if (checkInValues && checkInValues[0] !== undefined && checkInValues[1] !== undefined && checkInValues[2] !== undefined) { %>
+                <tr>
+                  <td><%= checkInValues[0] %> °C</td>
+                  <td><%= checkInValues[1] %>%</td>
+                  <td><%= checkInValues[2] %></td>
+                </tr>
+              <% } else { %>
+                <tr>
+                  <td colspan="3">No data available</td>
+                </tr>
+              <% } %>
             </tbody>
           </table>
 
