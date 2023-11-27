@@ -1,120 +1,185 @@
+<!-- views/index.ejs -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>IOT Project</title>
+    <!-- Add Bootstrap CSS link here -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
     <style>
-          body {
-            font-family: 'Arial', sans-serif;
-            margin: 20px;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f8f9fa;
+      }
 
-        h1 {
-            color: #333;
-        }
+      .container {
+        margin-top: 50px;
+      }
 
-        table {
-            width: 100%;
-            margin-top: 20px;
-            border-collapse: collapse;
-        }
+      .card {
+        border: none;
+        background-color: #fff;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
 
-        table, th, td {
-            border: 1px solid #ddd;
-        }
+      .card-header {
+        background-color: #007bff;
+        color: white;
+        border-bottom: none;
+        border-radius: 15px 15px 0 0;
+      }
 
-        th, td {
-            padding: 12px;
-            text-align: left;
-        }
+      h1 {
+        text-align: center;
+      }
 
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
+      p {
+        margin-top: 20px;
+        color: #333;
+        font-size: 18px;
+        text-align: center;
+        border: 1px solid #dee2e6;
+        padding: 10px;
+        border-radius: 10px;
+      }
 
-        p {
-            margin-top: 20px;
-            color: #333;
-        }
+      .light-door {
+        display: flex;
+        justify-content: space-around;
+      }
 
-        form {
-            margin-top: 10px;
-        }
+      form {
+        margin-top: 20px;
+        text-align: center;
+      }
 
-        label {
-            font-weight: bold;
-            margin-right: 10px;
-        }
+      label {
+        font-weight: bold;
+        margin-right: 10px;
+      }
 
-        input[type="submit"] {
-            padding: 8px;
-            font-size: 14px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
+      input[type="submit"] {
+        padding: 8px;
+        font-size: 14px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
 
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
+      input[type="submit"]:hover {
+        background-color: #218838;
+      }
 
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
+      nav {
+        background-color: #f9e9de;
+        border-bottom: 2px solid #9fb6c3;
+        padding: 5px;
+        text-align: center;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      nav h1 {
+        margin-left: 5px;
+        margin-top: 0;
+        margin-bottom: 0;
+        
+        color: #3e5172;
+        font-size: 24px; 
+      }
+
+      nav a {
+        color: #f9b49b;
+        text-decoration: none;
+        margin-left: 20px;
+        font-size: 18px;
+      }
+
+      nav a:hover {
+        cursor: pointer;
+        text-decoration: dotted;
+        color: #cc6c5c;
+      }
+      .state-text {
+        color: #218838;
+      }
     </style>
-</head>
-<body>
-    <h1>IOT Group 19</h1>
+  </head>
+  <body>
+    <!-- Navigation bar -->
+    <nav>
+      <h1>IOT Group 19</h1>
+      <a href="/logout">Logout</a>
+    </nav>
 
-    <!-- Display current state of Light and AC beside the toggle buttons -->
-    <p>Current Light State: <%= lightState %></p>
-    <p>Current Door State: <%= acState %></p>
-
-    <!-- Table to display Nhiệt độ phòng, Độ ẩm, and Khí Gas data -->
-    <table>
-        <thead>
-            <tr>
+    <div class="container">
+      <div class="card">
+        <div class="card-header">
+          <h1>IOT Project</h1>
+        </div>
+        <div class="card-body">
+          <!-- Display current state of Light and Door beside the toggle buttons -->
+          <div class="light-door">
+            <p>Current Door: <span class="state-text"> <%= doorState %></span></p>
+            <p>Current Light: <span class="state-text"> <%= lightState %></span></p>
+          </div>
+          <!-- Table to display Nhiệt độ phòng, Độ ẩm, and Khí Gas data -->
+          <table class="table table-bordered">
+            <thead class="thead-dark">
+              <tr>
                 <th>Nhiệt độ phòng</th>
                 <th>Độ ẩm</th>
                 <th>Khí Gas</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
                 <td><%= checkInValues[0] %></td>
                 <td><%= checkInValues[1] %></td>
                 <td><%= checkInValues[2] %></td>
-            </tr>
-        </tbody>
-    </table>
+              </tr>
+            </tbody>
+          </table>
 
-    <!-- Button to toggle Light State -->
-    <form action="/updateLightState" method="POST">
-        <div>
-            <label for="lightState">Toggle Light:</label>
-            <input type="submit" value="Toggle">
+          <div class="light-door">
+            <!-- Button to toggle Door State -->
+            <form action="/updateDoorState" method="POST">
+              <div>
+                <label for="doorState">Toggle Door:</label>
+                <input type="submit" value="Toggle" class="btn btn-success" />
+              </div>
+            </form>
+            <!-- Button to toggle Light State -->
+            <form action="/updateLightState" method="POST">
+              <div>
+                <label for="lightState">Toggle Light:</label>
+                <input type="submit" value="Toggle" class="btn btn-success" />
+              </div>
+            </form>
+          </div>
         </div>
-    </form>
-
-    <!-- Button to toggle AC State -->
-    <form action="/updateACState" method="POST">
-        <div>
-            <label for="acState">Toggle Door:</label>
-            <input type="submit" value="Toggle">
-        </div>
-    </form>
+      </div>
+    </div>
 
     <script>
-        // Auto-update every 60,000ms (60 seconds)
-        setInterval(function() {
-            location.reload();
-        }, 5000);
+      // Auto-update every 60,000ms (60 seconds)
+      setInterval(function () {
+        location.reload();
+      }, 5000);
     </script>
-</body>
+
+    <!-- Add Bootstrap JS and Popper.js scripts at the end of the body -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
 </html>

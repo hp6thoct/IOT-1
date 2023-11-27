@@ -2,6 +2,8 @@ const express = require("express");
 const { google } = require("googleapis");
 
 const app = express();
+let loggedIn = false;
+let username, password;
 
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
@@ -28,6 +30,12 @@ async function getSheetValues(auth, spreadsheetId, range) {
 }
 
 app.get("/", async (req, res) => {
+    // Redirect to login page if not logged in
+    if (!loggedIn) {
+        res.redirect("/login");
+        return;
+    }
+
     const auth = await getAuthClient();
 
     const spreadsheetId = "1uUumH7kO0ptmM8tj0dLHK0orMq_om9ceLA2wdALwWKM";
@@ -39,18 +47,18 @@ app.get("/", async (req, res) => {
     const lightStateResponse = await getSheetValues(auth, spreadsheetId, "Iot!C2:C2");
     const lightState = lightStateResponse[0][0] || null;
 
-    // Get state of AC
-    const acStateResponse = await getSheetValues(auth, spreadsheetId, "Iot!B2:B2");
-    const acState = acStateResponse[0][0] || null;
+    // Get state of Door
+    const doorStateResponse = await getSheetValues(auth, spreadsheetId, "Iot!B2:B2");
+    const doorState = doorStateResponse[0][0] || null;
 
-    res.render("index", { checkInValues, lightState, acState });
+    res.render("index", { checkInValues, lightState, doorState });
 });
 
 // New route to handle toggling Light State
 app.post("/updateLightState", async (req, res) => {
     const auth = await getAuthClient();
     const spreadsheetId = "1uUumH7kO0ptmM8tj0dLHK0orMq_om9ceLA2wdALwWKM";
-    
+
     const googleSheets = google.sheets({ version: "v4", auth });
 
     // Get the current state of the light
@@ -79,14 +87,14 @@ app.post("/updateLightState", async (req, res) => {
     res.redirect("/"); // Redirect back to the home page after updating
 });
 
-// New route to handle toggling AC State
-app.post("/updateACState", async (req, res) => {
+// New route to handle toggling Door State
+app.post("/updateDoorState", async (req, res) => {
     const auth = await getAuthClient();
     const spreadsheetId = "1uUumH7kO0ptmM8tj0dLHK0orMq_om9ceLA2wdALwWKM";
-    
+
     const googleSheets = google.sheets({ version: "v4", auth });
 
-    // Get the current state of the AC
+    // Get the current state of the Door
     const response = await googleSheets.spreadsheets.values.get({
         spreadsheetId,
         range: "Iot!B2:B2",
@@ -95,8 +103,8 @@ app.post("/updateACState", async (req, res) => {
     // Extract the current value
     const currentValue = response.data.values[0][0];
 
-    // Toggle the state of the AC
-    const newACState = currentValue === "1on" ? "1off" : "1on";
+    // Toggle the state of the Door
+    const newDoorState = currentValue === "1on" ? "1off" : "1on";
 
     // Update the cell with the new value
     await googleSheets.spreadsheets.values.update({
@@ -105,11 +113,41 @@ app.post("/updateACState", async (req, res) => {
         range: "Iot!B2:B2",
         valueInputOption: "USER_ENTERED",
         resource: {
-            values: [[newACState]],
+            values: [[newDoorState]],
         },
     });
 
     res.redirect("/"); // Redirect back to the home page after updating
+});
+
+app.get("/login", (req, res) => {
+    res.render("login", { error: null });
+});
+
+app.post("/login", async (req, res) => {
+    username = req.body.username;
+    password = req.body.password;
+
+    const auth = await getAuthClient();
+
+    const spreadsheetId = "1uUumH7kO0ptmM8tj0dLHK0orMq_om9ceLA2wdALwWKM";
+
+    const accountData = await getSheetValues(auth, spreadsheetId, "Account!A2:B");
+
+    const authSuccessful = accountData.some((row) => row[0] === username && row[1] === password);
+
+    if (authSuccessful) {
+        loggedIn = true;
+        res.redirect("/");
+    } else {
+        loggedIn = false;
+        res.render("login", { error: "Invalid credentials" });
+    }
+});
+
+app.get("/logout", (req, res) => {
+    loggedIn = false;
+    res.redirect("/login");
 });
 
 
